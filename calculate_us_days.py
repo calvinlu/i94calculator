@@ -1,6 +1,11 @@
-from datetime import datetime, date, timedelta
-from typing import List, Tuple, Optional
 import sys
+from datetime import datetime, date, timedelta
+from i94calculator.us_days import (
+    parse_travel_log,
+    build_us_intervals,
+    add_window_start_interval,
+    calculate_overlap_days
+)
 
 def parse_travel_log_line(line: str) -> Optional[Tuple[date, str, str]]:
     """
