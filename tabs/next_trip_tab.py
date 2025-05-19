@@ -33,24 +33,47 @@ def create_next_trip_tab(notebook):
 
     def calculate_next_trip_days():
         travel_log = trip_log_text.get("1.0", tk.END).strip()
+        trip_start_str = trip_start_entry.get().strip()
         trip_end_str = trip_end_entry.get().strip()
+        
         if not travel_log:
             messagebox.showerror("Input Error", "Please paste your I-94 history.")
             return
+            
         try:
-            as_of_date = datetime.strptime(trip_end_str, "%Y-%m-%d").date()
+            trip_start = datetime.strptime(trip_start_str, "%Y-%m-%d").date()
+            trip_end = datetime.strptime(trip_end_str, "%Y-%m-%d").date()
+            
+            if trip_start >= trip_end:
+                messagebox.showerror("Input Error", "Trip start date must be before trip end date.")
+                return
+                
         except Exception:
-            messagebox.showerror("Input Error", "Please select a valid trip end date.")
+            messagebox.showerror("Input Error", "Please select valid trip dates.")
             return
-        window_start = as_of_date - timedelta(days=365)
+            
+        # Calculate days spent in the US in the 12 months before the trip end date
+        window_start = trip_end - timedelta(days=365)
         entries = parse_travel_log(travel_log)
         if not entries:
             messagebox.showinfo("Result", f"No valid entries found.\nDays in US: 0")
             return
-        intervals = build_us_intervals(entries, as_of_date)
+            
+        # Add the upcoming trip as an interval
+        # Format matches what parse_travel_log returns
+        entries.append((trip_start, 'Arrival', 'Next Trip Start'))
+        entries.append((trip_end, 'Departure', 'Next Trip End'))
+        
+        intervals = build_us_intervals(entries, trip_end)
         intervals = add_window_start_interval(entries, intervals, window_start)
-        days = calculate_overlap_days(intervals, window_start, as_of_date)
-        messagebox.showinfo("Result", f"Days spent in the US in the 12 months before {as_of_date}: {days}")
+        days = calculate_overlap_days(intervals, window_start, trip_end)
+        
+        # Calculate days remaining before reaching 180
+        days_remaining = 180 - days
+        
+        messagebox.showinfo("Result", 
+            f"Days spent in the US in the 12 months before {trip_end}: {days}\n"
+            f"Days remaining before reaching 180: {days_remaining if days_remaining > 0 else '0'}")
 
     calc_next_trip_button = tk.Button(tab, text="Calculate Days for Next Trip", command=calculate_next_trip_days)
     calc_next_trip_button.pack(pady=(10,0))
