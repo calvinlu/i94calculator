@@ -1,4 +1,6 @@
 Row	DATE	TYPE	LOCATION
+-5  2025-07-17	Departure	SMF
+-4  2025-07-13	Arrival	Honduras
 -3	2025-07-02	Departure	SMF
 -2	2025-07-02	Arrival	SMF
 -1	2025-06-01	Departure	SMF
