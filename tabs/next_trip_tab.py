@@ -9,7 +9,9 @@ from i94calculator.us_days import (
     calculate_overlap_days
 )
 
-def create_next_trip_tab(notebook):
+from tkinter.ttk import Notebook
+
+def create_next_trip_tab(notebook: Notebook) -> tk.Frame:
     tab = tk.Frame(notebook)
     notebook.add(tab, text="Next Trip")
 

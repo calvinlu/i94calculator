@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
+from tkinter.ttk import Notebook
 from tkcalendar import DateEntry
 from datetime import datetime, date, timedelta
 from i94calculator.us_days import (
@@ -9,7 +10,7 @@ from i94calculator.us_days import (
     calculate_overlap_days
 )
 
-def create_calculate_days_tab(notebook):
+def create_calculate_days_tab(notebook: Notebook) -> tk.Frame:
     tab = tk.Frame(notebook)
     notebook.add(tab, text="Calculate Days")
 
